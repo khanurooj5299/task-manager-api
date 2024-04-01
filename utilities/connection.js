@@ -12,7 +12,6 @@ const connectionPromise = mongoose
   })
   .catch((err) => {
     console.log("Connection to DB failed!");
-    console.error(err);
     throw err;
   });
 
