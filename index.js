@@ -11,8 +11,11 @@ connection.connect
     const app = express();
     const PORT = process.env.PORT | 3000;
     const taskRouter = require("./routers/task.router");
+    const session = require("express-session");
 
     //register middleware
+    //session middleware is required for count API
+    app.use(session({session: process.env.SECRET_KEY || "my key"}));
     app.use(express.json());
     app.use(cors());
 
