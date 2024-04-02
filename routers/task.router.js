@@ -11,10 +11,10 @@ router.get("/tasks", (req, res, next) => {
 
 router.post("/add-task", (req, res, next) => {
   //set count data in session. Count is incremented even the operation is successful as it just reflects how many times api was hit
-  if (req.session.updateCount) {
-    req._construct.session.updateCount++;
+  if (req.session.addCount) {
+    req.session.addCount++;
   } else {
-    req.session.updateCount = 1;
+    req.session.addCount = 1;
   }
   //check if req body is in correct shape
   if (req.body && req.body.title && req.body.deadline) {
@@ -29,7 +29,7 @@ router.post("/add-task", (req, res, next) => {
 router.put("/update-task/:updateId", (req, res, next) => {
   //set count data in session. Count is incremented even the operation is successful as it just reflects how many times api was hit
   if (req.session.updateCount) {
-    req._construct.session.updateCount++;
+    req.session.updateCount++;
   } else {
     req.session.updateCount = 1;
   }

@@ -16,12 +16,28 @@ connection.connect
     //register middleware
     //session middleware is required for count API
     app.use(express.json());
-    app.use(cors());
+    app.use(
+      cors({
+        /*this config object is set because on the frontend fetch api is used which requires credentials: 'include' option
+        for sending and recieving cookies from cross origin servers. But when that option is set, in the response
+        wildcard cannot be used for Access-Control-Allow-Origin header and Access-Control-Allow-Credentials header should be true. 
+        Hence we put the current requests origin there and set the other header mentioned to true to make both cors and cookie work*/
+        origin: function (origin, callback) {
+          // Allow requests from any origin
+          callback(null, origin);
+        },
+        credentials: true
+      })
+    );
     app.use(
       session({
         secret: process.env.SECRET_KEY || "my key",
         resave: false,
-        saveUninitialized: false,
+        saveUninitialized: true,
+        cookie: {
+          //set to false so that cookie will be set even if connection is not over https. important for local development
+          secure: false,
+        },
       })
     );
 
