@@ -10,6 +10,13 @@ router.get("/tasks", (req, res, next) => {
 });
 
 router.post("/add-task", (req, res, next) => {
+  //set count data in session. Count is incremented even the operation is successful as it just reflects how many times api was hit
+  if (req.session.updateCount) {
+    req._construct.session.updateCount++;
+  } else {
+    req.session.updateCount = 1;
+  }
+  //check if req body is in correct shape
   if (req.body && req.body.title && req.body.deadline) {
     TaskModel.create(req.body)
       .then((insertedTask) => res.json(insertedTask))
@@ -20,8 +27,15 @@ router.post("/add-task", (req, res, next) => {
 });
 
 router.put("/update-task/:updateId", (req, res, next) => {
+  //set count data in session. Count is incremented even the operation is successful as it just reflects how many times api was hit
+  if (req.session.updateCount) {
+    req._construct.session.updateCount++;
+  } else {
+    req.session.updateCount = 1;
+  }
   const task = req.body;
   const id = req.params.updateId;
+  //check if req body is in correct shape
   if (task && task.title && task.deadline) {
     TaskModel.updateOne({ _id: id }, task)
       .then((result) => {
@@ -35,6 +49,21 @@ router.put("/update-task/:updateId", (req, res, next) => {
   } else {
     throw { status: 400, message: "Incorrect request body" };
   }
+});
+
+router.get('/count', (req, res, next)=>{
+  let addCount = 0;
+  let updateCount = 0;
+  if(req.session.addCount) {
+    addCount = req.session.addCount;
+  }
+  if(req.session.updateCount) {
+    updateCount = req.session.updateCount;
+  }
+  res.json({
+    addCount,
+    updateCount
+  });
 });
 
 module.exports = router;
