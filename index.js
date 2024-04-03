@@ -16,6 +16,7 @@ connection.connect
     //register middleware
     //session middleware is required for count API
     app.use(express.json());
+    app.set('trust proxy', 1); //to enable secure:true cookies after deployment
     app.use(
       cors({
         /*this config object is set because on the frontend fetch api is used which requires credentials: 'include' option
@@ -36,9 +37,13 @@ connection.connect
         saveUninitialized: true,
         cookie: {
           //set to false so that cookie will be set even if connection is not over https. important for local development
-          secure: false,
+          // secure: false,
+          //for production
+          secure: true,
           //so that the session management cookie becomes a session cookie. When browser is closed the cookie will be cleared from the browser
           maxAge: null,
+          //so that browser will send the cookie back even though it will be a cross-site request
+          sameSite: "none"
         },
       })
     );
