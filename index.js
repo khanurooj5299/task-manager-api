@@ -23,10 +23,12 @@ connection.connect
         for sending and recieving cookies from cross origin servers. But when that option is set, in the response
         wildcard cannot be used for Access-Control-Allow-Origin header and Access-Control-Allow-Credentials header should be true. 
         Hence we put the current requests origin there and set the other header mentioned to true to make both cors and cookie work*/
-        origin: function (origin, callback) {
-          // Allow requests from any origin
-          callback(null, origin);
-        },
+        // origin: function (origin, callback) {
+        //   // Allow requests from any origin
+        //   callback(null, origin);
+        // },
+        //for production only allow the deployed frontend domain
+        origin: "https://task-manager-c2f3.onrender.com",
         credentials: true,
       })
     );
