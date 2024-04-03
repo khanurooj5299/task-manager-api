@@ -12,11 +12,27 @@ connection.connect
     const PORT = process.env.PORT | 3000;
     const taskRouter = require("./routers/task.router");
     const session = require("express-session");
+    const { performance } = require('perf_hooks');
 
     //register middleware
+    //middleware to measure execution time
+    app.use((req, res, next) => {
+      //record start time
+      const start = performance.now(); 
+      res.on("finish", () => {
+        //record end time
+        const end = performance.now();
+        //calculate execution time
+        const executionTime = end - start;
+        console.log(
+          `[${req.method}] ${req.url} - Execution Time: ${executionTime}ms`
+        );
+      });
+      next();
+    });
     //session middleware is required for count API
     app.use(express.json());
-    app.set('trust proxy', 1); //to enable secure:true cookies after deployment
+    app.set("trust proxy", 1); //to enable secure:true cookies after deployment
     app.use(
       cors({
         /*this config object is set because on the frontend fetch api is used which requires credentials: 'include' option
@@ -45,7 +61,7 @@ connection.connect
           //so that the session management cookie becomes a session cookie. When browser is closed the cookie will be cleared from the browser
           maxAge: null,
           //so that browser will send the cookie back even though it will be a cross-site request
-          sameSite: "none"
+          sameSite: "none",
         },
       })
     );
