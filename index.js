@@ -26,7 +26,7 @@ connection.connect
           // Allow requests from any origin
           callback(null, origin);
         },
-        credentials: true
+        credentials: true,
       })
     );
     app.use(
@@ -37,6 +37,8 @@ connection.connect
         cookie: {
           //set to false so that cookie will be set even if connection is not over https. important for local development
           secure: false,
+          //so that the session management cookie becomes a session cookie. When browser is closed the cookie will be cleared from the browser
+          maxAge: null,
         },
       })
     );
